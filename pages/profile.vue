@@ -39,6 +39,7 @@ import Tiles from '@/components/Tiles'
 import UserAvatar from '@/components/UserAvatar'
 export default {
   name: 'Profile',
+  layout:'Default',
   components: {
     UserAvatar,
     Tiles,

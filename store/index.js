@@ -1,3 +1,6 @@
+import ApplicationsService from '~/services/ApplicationsService'
+import StudentsService from "~/services/StudentsService";
+
 export const state = () => ({
   /* User */
   userName: null,
@@ -13,9 +16,17 @@ export const state = () => ({
   /* Aside */
   isAsideVisible: true,
   isAsideMobileExpanded: false,
+  applications_list: [],
+  students_list: [],
 })
 
 export const mutations = {
+  SET_APPLICATIONS_LIST(state, applications) {
+    state.applications_list = applications
+  },
+  SET_STUDENTS_LIST(state, students) {
+    state.students_list = students
+  },
   /* A fit-them-all commit */
   basic(state, payload) {
     state[payload.key] = payload.value
@@ -53,5 +64,20 @@ export const mutations = {
     }
 
     state.isAsideMobileExpanded = isShow
+  },
+}
+
+export const actions = {
+  async getApplications({ commit }) {
+    const response = await ApplicationsService.lisApplications()
+    if (response.data.status) {
+      commit('SET_APPLICATIONS_LIST', response.data.data)
+    }
+  },
+  async getStudentsList({ commit }) {
+    const response = await StudentsService.listStudents()
+    if (response.data.status) {
+      commit('SET_STUDENTS_LIST', response.data.data)
+    }
   },
 }

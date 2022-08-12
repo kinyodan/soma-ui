@@ -1,57 +1,14 @@
 <template>
   <div>
     <title-bar :title-stack="titleStack" />
-    <hero-bar :has-right-visible="false"> Dashboard </hero-bar>
     <section class="section is-main-section">
-      <tiles>
-        <card-widget
-          class="tile is-child"
-          type="is-primary"
-          icon="account-multiple"
-          :number="total_student_count"
-          label="Students"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-info"
-          icon="cart-outline"
-          :number="total_applications_count"
-          prefix=""
-          label="Total Application"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-success"
-          icon="chart-timeline-variant"
-          :number="completed_applications_count"
-          suffix="%"
-          label="Processed applications"
-        />
-      </tiles>
-
       <card-component
-        title="Performance"
-        icon="finance"
-        header-icon="reload"
-        @header-icon-click="fillChartData"
-      >
-        <div v-if="defaultChart.chartData" class="chart-area">
-          <line-chart
-            ref="bigChart"
-            style="height: 100%"
-            chart-id="big-line-chart"
-            :chart-data="defaultChart.chartData"
-            :extra-options="defaultChart.extraOptions"
-          >
-          </line-chart>
-        </div>
-      </card-component>
-      <card-component
-        title="Applications"
+        title="Applications---"
         class="has-table has-mobile-sort-spaced"
       >
-        <applications-table
-          :applications_list="applications_list"
+        <students-table
+          v-if="listItems"
+          :students_list="students_list"
           :data-url="`${$router.options.base}data-sources/clients.json`"
         />
       </card-component>
@@ -61,6 +18,7 @@
 
 <script>
 // @ is an alias to /src
+import { mapActions, mapState } from 'vuex'
 import * as chartConfig from '@/components/Charts/chart.config'
 import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'
@@ -68,18 +26,24 @@ import Tiles from '@/components/Tiles'
 import CardWidget from '@/components/CardWidget'
 import CardComponent from '@/components/CardComponent'
 import LineChart from '@/components/Charts/LineChart'
-import ApplicationsTable from '~/components/applications/ApplicationsTable'
-import DashboardService from '~/services/DashboardService'
+import StudentsTable from '@/components/students/StudentsTable'
+import ClientsTableSample from '~/components/applications/ApplicationsTable'
 
 export default {
   name: 'Home',
   layout: 'Default',
   components: {
-    ApplicationsTable,
+    StudentsTable,
+    // eslint-disable-next-line vue/no-unused-components
+    ClientsTableSample,
+    // eslint-disable-next-line vue/no-unused-components
     LineChart,
     CardComponent,
+    // eslint-disable-next-line vue/no-unused-components
     CardWidget,
+    // eslint-disable-next-line vue/no-unused-components
     Tiles,
+    // eslint-disable-next-line vue/no-unused-components
     HeroBar,
     TitleBar,
   },
@@ -89,22 +53,21 @@ export default {
         chartData: null,
         extraOptions: chartConfig.chartOptionsMain,
       },
-      applications_list: [],
-      total_student_count: 0,
-      total_applications_count: 0,
-      completed_applications_count: 0,
     }
   },
   computed: {
+    ...mapState({
+      students_list: (state) => state.students_list,
+    }),
     titleStack() {
-      return ['Admin', 'Dashboard']
+      return ['Admin', 'Students']
     },
     listItems() {
-      return this.applications_list
+      return this.students_list
     },
   },
   created() {
-    this.getDashboardCountData()
+    this.getStudentsList()
   },
   mounted() {
     this.fillChartData()
@@ -114,16 +77,7 @@ export default {
     })
   },
   methods: {
-    async getDashboardCountData() {
-      await DashboardService.dashboardData().then((response) => {
-        if (response.data.status) {
-          this.total_student_count = response.data.data.students_count
-          this.total_applications_count = response.data.data.applications_count
-          this.completed_applications_count = response.data.data.completed_applications
-          this.applications_list = response.data.data.applications_list
-        }
-      })
-    },
+    ...mapActions(['getStudentsList']),
     randomChartData(n) {
       const data = []
 
@@ -188,7 +142,7 @@ export default {
   },
   head() {
     return {
-      title: 'Dashboard — Wankimani',
+      title: 'Students —Wankimani ',
     }
   },
 }

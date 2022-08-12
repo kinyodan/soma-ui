@@ -60,7 +60,7 @@
 
 <script>
 import Notification from '@/components/Notification'
-import ClientsTableSample from '~/components/ApplicationsTable'
+import ClientsTableSample from '~/components/applications/ApplicationsTable'
 import CardComponent from '@/components/CardComponent'
 import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'

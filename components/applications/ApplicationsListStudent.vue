@@ -50,14 +50,15 @@
             class="progress is-small is-primary"
             :value="props.row.progress"
             max="100"
-            >{{ props.row.progress }}</progress
           >
+            {{ props.row.progress }}
+          </progress>
         </b-table-column>
         <b-table-column label="Created">
           <small
             class="has-text-grey is-abbr-like"
             :title="props.row.created_at"
-            >{{ props.row.created_at }}</small
+          >{{ props.row.created_at }}</small
           >
         </b-table-column>
         <b-table-column label="Last updated">
@@ -108,17 +109,12 @@
 
 <script>
 import axios from 'axios'
-import ModalBox from '@/components/ModalBox'
-import ApplicationsService from '~/services/ApplicationsService';
+import ModalBox from '~/components/ModalBox'
 
 export default {
-  name: 'ApplicationsTable',
+  name: 'ApplicationsListStudent',
   components: { ModalBox },
-  props: [
-    'applications_list',
-    'dataUrl',
-    'checkable',
-  ],
+  props: ['applications_list', 'dataUrl', 'checkable'],
   data() {
     return {
       isModalActive: false,
@@ -127,7 +123,7 @@ export default {
       paginated: false,
       perPage: 10,
       checkedRows: [],
-      applications:this.applications_list
+      applications: this.applications_list
     }
   },
   computed: {
@@ -137,12 +133,8 @@ export default {
       }
       return null
     },
-    // applicationsList(){
-    //   return this.applications
-    // }
   },
-  created(){
-  },
+  created() {},
   mounted() {
     if (this.dataUrl) {
       this.isLoading = true
@@ -167,12 +159,6 @@ export default {
     }
   },
   methods: {
-    async getApplicationsList(){
-      let response = await ApplicationsService.lisApplications()
-      if(response.data.data.status){
-        this.applications=response.data.data
-      }
-    },
     trashModal(trashObject) {
       this.trashObject = trashObject
       this.isModalActive = true

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 export const apiPostClient = axios.create({
   baseURL: `${process.env.APIURL}`,
@@ -22,8 +22,8 @@ export const apiGetClient = axios.create({
   baseURL: `${process.env.APIURL}`,
   withCredentials: false, // This is the default
   headers: {
-    'locale': 'en'
-  }
+    locale: 'en',
+  },
 })
 
 // listApiPostClient.interceptors.request.use(function (config) {
@@ -32,11 +32,10 @@ export const apiGetClient = axios.create({
 //   return config;
 // });
 
-// export const authApiPostClient = axios.create({
-//   baseURL: `${process.env.APIURL}`,
-//   withCredentials: false, // This is the default
-//   headers: {
-//     'service': process.env.SERVICECODE,
-//   }
-// });
+export const authApiPostClient = axios.create({
+  baseURL: `${process.env.APIURL}`,
+  withCredentials: false, // This is the default
+  headers: {
+  }
+});
 

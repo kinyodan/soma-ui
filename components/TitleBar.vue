@@ -4,8 +4,18 @@
       <div class="level-left">
         <div class="level-item">
           <ul>
-            <li v-for="(title, index) in titleStack" :key="index">
+            <li
+              v-if="titleStack"
+              v-for="(title, index) in titleStack"
+              :key="index"
+            >
               {{ title }}
+            </li>
+            <li>
+              <span v-if="student">
+                <span v-if="salutation">{{ salutation }}</span>
+                {{ student.first_name }} {{ student.last_name }}
+              </span>
             </li>
           </ul>
         </div>
@@ -31,11 +41,6 @@
 <script>
 export default {
   name: 'TitleBar',
-  props: {
-    titleStack: {
-      type: Array,
-      default: () => [],
-    },
-  },
+  props: ['titleStack', 'student', 'salutation'],
 }
 </script>

@@ -1,51 +1,7 @@
 <template>
   <div>
     <title-bar :title-stack="titleStack" />
-    <hero-bar :has-right-visible="false"> Dashboard </hero-bar>
     <section class="section is-main-section">
-      <tiles>
-        <card-widget
-          class="tile is-child"
-          type="is-primary"
-          icon="account-multiple"
-          :number="total_student_count"
-          label="Students"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-info"
-          icon="cart-outline"
-          :number="total_applications_count"
-          prefix=""
-          label="Total Application"
-        />
-        <card-widget
-          class="tile is-child"
-          type="is-success"
-          icon="chart-timeline-variant"
-          :number="completed_applications_count"
-          suffix="%"
-          label="Processed applications"
-        />
-      </tiles>
-
-      <card-component
-        title="Performance"
-        icon="finance"
-        header-icon="reload"
-        @header-icon-click="fillChartData"
-      >
-        <div v-if="defaultChart.chartData" class="chart-area">
-          <line-chart
-            ref="bigChart"
-            style="height: 100%"
-            chart-id="big-line-chart"
-            :chart-data="defaultChart.chartData"
-            :extra-options="defaultChart.extraOptions"
-          >
-          </line-chart>
-        </div>
-      </card-component>
       <card-component
         title="Applications"
         class="has-table has-mobile-sort-spaced"
@@ -61,6 +17,7 @@
 
 <script>
 // @ is an alias to /src
+import { mapState, mapActions } from 'vuex'
 import * as chartConfig from '@/components/Charts/chart.config'
 import TitleBar from '@/components/TitleBar'
 import HeroBar from '@/components/HeroBar'
@@ -68,14 +25,15 @@ import Tiles from '@/components/Tiles'
 import CardWidget from '@/components/CardWidget'
 import CardComponent from '@/components/CardComponent'
 import LineChart from '@/components/Charts/LineChart'
+import ClientsTableSample from '~/components/applications/ApplicationsTable'
 import ApplicationsTable from '~/components/applications/ApplicationsTable'
-import DashboardService from '~/services/DashboardService'
 
 export default {
   name: 'Home',
   layout: 'Default',
   components: {
     ApplicationsTable,
+    ClientsTableSample,
     LineChart,
     CardComponent,
     CardWidget,
@@ -89,22 +47,22 @@ export default {
         chartData: null,
         extraOptions: chartConfig.chartOptionsMain,
       },
-      applications_list: [],
-      total_student_count: 0,
-      total_applications_count: 0,
-      completed_applications_count: 0,
     }
   },
   computed: {
+    ...mapState({
+      applications_list: (state) => state.applications_list,
+    }),
     titleStack() {
-      return ['Admin', 'Dashboard']
+      return ['Admin', 'Applications']
     },
     listItems() {
       return this.applications_list
     },
   },
   created() {
-    this.getDashboardCountData()
+    this.getApplications()
+    this.$nuxt.$on('refreshApplicationList', (event) => this.getApplications())
   },
   mounted() {
     this.fillChartData()
@@ -114,16 +72,7 @@ export default {
     })
   },
   methods: {
-    async getDashboardCountData() {
-      await DashboardService.dashboardData().then((response) => {
-        if (response.data.status) {
-          this.total_student_count = response.data.data.students_count
-          this.total_applications_count = response.data.data.applications_count
-          this.completed_applications_count = response.data.data.completed_applications
-          this.applications_list = response.data.data.applications_list
-        }
-      })
-    },
+    ...mapActions(['getApplications']),
     randomChartData(n) {
       const data = []
 
@@ -188,7 +137,7 @@ export default {
   },
   head() {
     return {
-      title: 'Dashboard — Wankimani',
+      title: 'Applications —Wankimani ',
     }
   },
 }
