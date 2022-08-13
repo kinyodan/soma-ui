@@ -10,10 +10,10 @@
         </v-card-actions>
         <tiles>
           <template>
-            <v-expansion-panels v-model="openMe">
+            <v-expansion-panels v-model="panel">
               <v-expansion-panel>
                 <v-expansion-panel-header>
-                  Application Attachments
+                  Application Attachments--{{ item.name }}
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <application-form-attachments
@@ -41,11 +41,35 @@
             <i class="fa fa-pencil-square" aria-hidden="true"></i>
           </v-btn>
         </div>
-        <v-btn icon class="ml-5">
+        <v-btn icon class="ml-5" @click="deleteApplication">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-card-title>
     </v-card>
+
+    <template>
+      <v-dialog
+        v-model="dialogDelete"
+        v-if="openDeleteDialog"
+        max-width="500"
+        content-class="dialog"
+      >
+        <v-card>
+          <v-card-title class="text-h6 text-center"
+            >Are you sure you want to delete this record?</v-card-title
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue" text @click="closeDelete">Cancel</v-btn>
+            <v-btn color="error" text @click="deleteApplicationConfirm"
+              >OK</v-btn
+            >
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </template>
+
     <v-card-text class="py-0">
       <v-timeline align-top dense>
         <v-timeline-item :color="setProcessColor('color', 'done')">
@@ -117,20 +141,19 @@
             </v-col>
             <v-col>
               <div class="mb-2">Visa fee payment to account XXXXXX xxx</div>
-              <v-avatar>
+              <v-avatar
+                class="payment_button payment_button_card"
+                @click="opanPaymentDialog('card')"
+              >
                 <v-img
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"
-                ></v-img>
+                  src="/credit-card.png"
+                  @click="opanPaymentDialog('mpesa')"
+                >
+                </v-img>
               </v-avatar>
-              <v-avatar>
-                <v-img
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"
-                ></v-img>
-              </v-avatar>
-              <v-avatar>
-                <v-img
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"
-                ></v-img>
+              <v-avatar class="payment_button">
+                <v-img src="/mpesa_0.png" @click="opanPaymentDialog('mpesa')">
+                </v-img>
               </v-avatar>
             </v-col>
           </v-row>
@@ -237,10 +260,33 @@
           </v-card>
         </v-dialog>
       </v-row>
+
+      <template>
+        <v-row justify="center">
+          <v-dialog v-model="openPaymentDialog" width="600px">
+            <v-card>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="openPaymentDialog = false"
+                >
+                  Close
+                </v-btn>
+              </v-card-actions>
+              <payment-display></payment-display>
+              <v-card-text></v-card-text>
+            </v-card>
+          </v-dialog>
+        </v-row>
+      </template>
     </v-card-text>
   </v-card>
 </template>
 <script>
+import ApplicationsService from '@/services/ApplicationsService'
+import paymentDisplay from '@/components/applications/PaymentDisplay'
 import ModalBox from '~/components/ModalBox'
 import DocumentViewer from '~/components/applications/DocumentViewer'
 import ApplicationFormAttachments from '~/components/applications/ApplicationFormAttachments'
@@ -248,16 +294,25 @@ import ApplicationFormAttachments from '~/components/applications/ApplicationFor
 export default {
   name: 'ApplicationTimeline',
   // eslint-disable-next-line vue/no-unused-components
-  components: { ModalBox, DocumentViewer, ApplicationFormAttachments },
+  components: {
+    ModalBox,
+    DocumentViewer,
+    ApplicationFormAttachments,
+    paymentDisplay,
+  },
   // eslint-disable-next-line vue/prop-name-casing
   props: ['students_list', 'dataUrl', 'checkable', 'item'],
   data() {
     return {
       dialog: false,
+      openDeleteDialog: false,
       dialogDocuments: false,
       notifications: false,
+      dialogDelete: [],
+      openPaymentDialog: false,
       sound: true,
       widgets: false,
+      panel: 0,
       file: '',
       items: [
         { header: 'Today' },
@@ -323,9 +378,6 @@ export default {
       this.file = file.url
       console.log(file.url)
     },
-    openMe() {
-      return this.panel
-    },
     // eslint-disable-next-line camelcase
     setProcessColor(sectionName, workflow) {
       if (workflow === 'done') {
@@ -375,6 +427,32 @@ export default {
       } else if (sectionName === 'icon') {
         return this.stoppedColor.icon
       }
+    },
+    deleteApplication() {
+      console.log('deleteApplication')
+      this.openDeleteDialog = true
+    },
+    async deleteApplicationConfirm() {
+      const formData = new FormData()
+      formData.append('id', this.item.uuid)
+      formData.append('is_deleted', true)
+      const response = await ApplicationsService.deleteApplication(formData)
+      if (response.status) {
+        this.openDeleteDialog = false
+        this.responseSuccess = true
+        this.responseSuccessMessage = response.data.message
+        this.$nuxt.$emit('refreshStudentData', {
+          successStatus: this.responseSuccess,
+          successMessage: this.responseSuccessMessage,
+        })
+        console.log(response)
+      }
+    },
+    closeDelete() {
+      this.openDeleteDialog = false
+    },
+    opanPaymentDialog(paymentMode) {
+      this.openPaymentDialog = true
     },
   },
 }

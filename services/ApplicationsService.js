@@ -8,6 +8,7 @@ export default {
   // eslint-disable-next-line camelcase
   lisApplicationsForStudent(student_id) {
     // eslint-disable-next-line camelcase
+    console.log('student_applications_list----------')
     return apiGetClient.get(`/student_applications_list`, student_id)
   },
 
@@ -17,7 +18,7 @@ export default {
   getApplication(uuid) {
     return apiGetClient.get(`/student_applications/${uuid}`)
   },
-  deleteApplication(applicationId) {
-    return apiGetClient.delete(`/student_applications/${applicationId}`)
+  deleteApplication(formData) {
+    return apiGetClient.post(`/soft_destroy`, formData)
   },
 }

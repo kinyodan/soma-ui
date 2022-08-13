@@ -8,7 +8,14 @@
               <v-container fluid>
                 <v-row>
                   <v-col cols="12">
-                    {{ formdata.application_name }}
+                    <a
+                      v-if="application_item.name"
+                      href="javascript:void(0)"
+                    >
+                      <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                      Current name: <strong>{{ application_item.name }}</strong>
+                    </a>
+
                     <v-combobox
                       v-model="formdata.application_name"
                       :items="items"
@@ -187,6 +194,7 @@
   </div>
 </template>
 <script>
+import { mapActions, mapState } from 'vuex'
 import ApplicationsService from '~/services/ApplicationsService'
 
 export default {
@@ -274,10 +282,16 @@ export default {
       y: 0,
     }
   },
+  computed: {
+    ...mapState({
+      student_applications: (state) => state.student_applications,
+    }),
+  },
   mounted() {
-    // this.setData()
+    this.setData()
   },
   methods: {
+    ...mapActions(['getStudentApplications']),
     edit(index, item) {
       if (!this.editing) {
         this.editing = item
@@ -291,7 +305,6 @@ export default {
       if (item.header) return false
 
       const hasValue = val => val != null ? val : ''
-
       const text = hasValue(itemText)
       const query = hasValue(queryText)
 
@@ -300,12 +313,15 @@ export default {
         .indexOf(query.toString().toLowerCase()) > -1
     },
     selectFile() {
-      console.log('file selected ')
       this.fileCount += 1
     },
     async submit() {
       const formData = new FormData()
-      formData.append('name', JSON.stringify(this.application_name_selected))
+
+      if (typeof this.formdata.application_name === 'object') {
+        this.formdata.application_name = this.formdata.application_name.text
+      }
+      formData.append('name', this.formdata.application_name)
       formData.append('application_form', this.formdata.application_form)
       formData.append('student_id', this.student.id)
       formData.append('application_admin', this.formdata.application_admin)
@@ -332,12 +348,16 @@ export default {
       formData.append('visa_refusals', this.formdata.visa_refusals)
 
       await ApplicationsService.addApplication(formData).then((response) => {
-        console.log(response)
+        if (response.data.status) {
+          this.clearData()
+          this.$nuxt.$emit('refreshStudentData', this.student.id)
+        }
       })
     },
     setData() {
       if (this.application_item > 0) {
         this.formdata = {
+          application_name: this.application_item.name,
           application_admin: this.application_item.application_admin.url,
           progress_state: this.application_item.progress_state.url,
           ksce_cert: this.application_item.ksce_cert.url,
@@ -355,15 +375,29 @@ export default {
         }
       }
     },
+    clearData() {
+      this.formdata = {
+        application_admin: null,
+        progress_state: null,
+        ksce_cert: null,
+        degree_certificate: null,
+        recommendation_letters: null,
+        cv: this.application_item.cv,
+        personal_statement: null,
+        confirmation_of_acceptance: null,
+        bank_statement: null,
+        passport_copy: null,
+        passport: null,
+        school_leaving: null,
+        previous_visa: null,
+        visa_refusals: null,
+      }
+    },
   },
   watch: {
     application_name_selected(val, prev) {
-      console.log('application_name_selected')
-      console.log(this.application_name_selected)
-
       this.items = []
       let v = null
-
       if (typeof val === 'string') {
         v = {
           text: val,

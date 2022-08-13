@@ -89,6 +89,9 @@
           </card-component>
 
           <v-card width="700">
+            <v-alert v-if="responseSuccess" dense text type="success">
+              {{ responseSuccessMessage }}
+            </v-alert>
             <v-container min-height="200">
               <v-expansion-panels
                 v-if="application_list.length > 0"
@@ -111,13 +114,6 @@
               </v-card>
             </v-container>
           </v-card>
-
-          <!--        <card-component title="Application details" icon="account" class="tile is-child">-->
-
-          <!--          <applications-list-student-->
-          <!--            :application_list="application_list"-->
-          <!--          ></applications-list-student>-->
-          <!--        </card-component>-->
         </tiles>
       </section>
     </v-card>
@@ -134,7 +130,7 @@ import Tiles from '@/components/Tiles'
 import UserAvatar from '@/components/UserAvatar'
 import DocumentDisplay from '@/components/DocumentDisplay'
 import StudentsService from '@/services/StudentsService'
-import ApplicationsService from '~/services/ApplicationsService'
+import { mapActions, mapState } from 'vuex'
 import ApplicationsListStudent from '~/components/applications/ApplicationsListStudent'
 import ApplicationTimeline from '~/components/students/ApplicationTimeline'
 import ApplicationForm from '~/components/applications/ApplicationForm'
@@ -166,9 +162,20 @@ export default {
       application_item: { student_id: this.student },
       userEmail: '',
       panel: 0,
+      responseError: false,
+      responseErrorMessage: '',
+      responseSuccess: false,
+      responseSuccessMessage: '',
+      emitResponseError: false,
+      emitResponseErrorMessage: '',
+      emitResponseSuccess: false,
+      emitResponseSuccessMessage: '',
     }
   },
   computed: {
+    ...mapState('applications', {
+      student_applications: (state) => state.student_applications,
+    }),
     titleStack() {
       return ['Hi ']
     },
@@ -192,25 +199,34 @@ export default {
   },
   created() {
     this.getStudent()
+    this.$nuxt.$on('refreshStudentData', ($event) => this.getStudent($event))
   },
   mounted() {
     this.getStudent()
     this.getApplicationsList()
   },
   methods: {
+    ...mapActions('applications', ['getStudentApplications']),
     setFile(file) {
       this.file = file
     },
     // eslint-disable-next-line camelcase
-    async getApplicationsList(student_id) {
-      const response = await ApplicationsService.lisApplicationsForStudent(
-        this.$route.params.student
-      )
-      if (response.data.data.status) {
-        this.applications = response.data.data
+    async getApplicationsList(event) {
+      if (event) {
+        await this.getStudentApplications(event)
       }
     },
-    async getStudent() {
+    async getStudent(event) {
+      if (event) {
+        this.responseSuccess = event.successStatus
+        this.responseSuccessMessage = event.successMessage
+
+        setTimeout(() => {
+          this.responseSuccess = false
+          this.responseSuccessMessage = ''
+        }, '4000')
+      }
+      console.log('getStudent setting new applications list')
       const response = await StudentsService.getStudent(
         this.$route.params.student
       )

@@ -27,3 +27,16 @@
     border-radius: $radius-rounded;
   }
 }
+
+.payment_button{
+  cursor: pointer;
+  margin-left: 7px;
+}
+
+.payment_button :hover{
+ padding: 8px !important;
+}
+
+.payment_button_card{
+  border-radius: 1% !important;
+}
