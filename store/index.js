@@ -19,9 +19,13 @@ export const state = () => ({
   applications_list: [],
   students_list: [],
   student_applications: [],
+  user: [],
 })
 
 export const mutations = {
+  SET_USER(state, user) {
+    state.user = user
+  },
   SET_APPLICATIONS_LIST(state, applications) {
     state.applications_list = applications
   },
@@ -85,6 +89,12 @@ export const actions = {
     }
   },
   async getStudentsList({ commit }) {
+    const response = await StudentsService.listStudents()
+    if (response.data.status) {
+      commit('SET_STUDENTS_LIST', response.data.data)
+    }
+  },
+  async getStudent({ commit },studentId) {
     const response = await StudentsService.listStudents()
     if (response.data.status) {
       commit('SET_STUDENTS_LIST', response.data.data)

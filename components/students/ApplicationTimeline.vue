@@ -183,6 +183,18 @@
             </v-col>
             <v-col>
               <div class="mb-2">Appointment booking-TLC website</div>
+              <div class="my-2">
+                <v-btn
+                  small
+                  class="float-right"
+                  outlined
+                  bottom
+                  color="blue darken-1"
+                  @click="openDialogCalendar"
+                >
+                  Appointments
+                </v-btn>
+              </div>
             </v-col>
           </v-row>
         </v-timeline-item>
@@ -233,6 +245,7 @@
           </v-row>
         </v-timeline-item>
       </v-timeline>
+
       <v-row justify="center">
         <v-dialog
           v-model="dialogDocuments"
@@ -281,12 +294,43 @@
           </v-dialog>
         </v-row>
       </template>
+
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogCalendar"
+          fullscreen
+          hide-overlay
+          transition="dialog-bottom-transition"
+        >
+          <v-card>
+            <v-toolbar dark color="blue-grey darken-4">
+              <v-toolbar-title
+                >Appointment booking-TLC website
+              </v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-btn dark text @click="closeDialogCalendar">
+                  <v-icon>mdi-close</v-icon>
+                  Close
+                </v-btn>
+              </v-toolbar-items>
+            </v-toolbar>
+            <calendar-viewer
+              :item="item"
+              :dialogDocuments="dialogDocuments"
+              :student="student"
+              :application_item="item"
+            ></calendar-viewer>
+          </v-card>
+        </v-dialog>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
 <script>
 import ApplicationsService from '@/services/ApplicationsService'
 import paymentDisplay from '@/components/applications/PaymentDisplay'
+import calendarViewer from '@/components/applications/CalendarViewer'
 import ModalBox from '~/components/ModalBox'
 import DocumentViewer from '~/components/applications/DocumentViewer'
 import ApplicationFormAttachments from '~/components/applications/ApplicationFormAttachments'
@@ -299,16 +343,20 @@ export default {
     DocumentViewer,
     ApplicationFormAttachments,
     paymentDisplay,
+    calendarViewer,
   },
   // eslint-disable-next-line vue/prop-name-casing
-  props: ['students_list', 'dataUrl', 'checkable', 'item'],
+  props: ['students_list', 'dataUrl', 'checkable', 'item', 'student'],
   data() {
     return {
       dialog: false,
       openDeleteDialog: false,
       dialogDocuments: false,
+      dialogCalendar: false,
       notifications: false,
       dialogDelete: [],
+      events: [],
+      calendar_events: [],
       openPaymentDialog: false,
       sound: true,
       widgets: false,
@@ -357,6 +405,11 @@ export default {
       },
     }
   },
+  computed: {
+    setEvents() {
+      return this.events
+    },
+  },
   created() {
     this.$nuxt.$on('setDialogDocuments', ($event) =>
       this.closeDialogDocuments()
@@ -367,16 +420,19 @@ export default {
       this.dialog = true
     },
     openDialogDocuments() {
-      console.log('openDialogDocuments')
       this.dialogDocuments = true
     },
     closeDialogDocuments() {
-      console.log('closeDialogDocuments')
       this.dialogDocuments = false
+    },
+    openDialogCalendar() {
+      this.dialogCalendar = true
+    },
+    closeDialogCalendar() {
+      this.dialogCalendar = false
     },
     setFile(file) {
       this.file = file.url
-      console.log(file.url)
     },
     // eslint-disable-next-line camelcase
     setProcessColor(sectionName, workflow) {
@@ -429,7 +485,6 @@ export default {
       }
     },
     deleteApplication() {
-      console.log('deleteApplication')
       this.openDeleteDialog = true
     },
     async deleteApplicationConfirm() {
@@ -455,6 +510,14 @@ export default {
       this.openPaymentDialog = true
     },
   },
+  watch: {
+    events: {
+      immediate: true,
+      handler(val, oldVal) {
+        return this.setEvents
+      },
+    },
+  },
 }
 </script>
 <style>
@@ -464,9 +527,16 @@ html {
 .file_list_0 {
   width: 300px;
 }
+
 .file_view_0 {
   width: 100%;
 }
+
+.calendar_view_0 {
+  width: 80% !important;
+  height: 30% !important;
+}
+
 .file_view_0 embed {
   height: 600px !important;
   overflow: scroll;

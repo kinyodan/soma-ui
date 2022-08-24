@@ -56,7 +56,7 @@
         <nav-bar-menu class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
-            <span>{{ userName }}</span>
+            <span>{{ userEmail }}</span>
           </div>
 
           <div slot="dropdown" class="navbar-dropdown">
@@ -127,7 +127,12 @@ export default {
     menuToggleMobileIcon() {
       return this.isAsideMobileExpanded ? 'backburger' : 'forwardburger'
     },
-    ...mapState(['isNavBarVisible', 'isAsideMobileExpanded', 'userName']),
+    ...mapState([
+      'isNavBarVisible',
+      'isAsideMobileExpanded',
+      'userName',
+      'userEmail',
+    ]),
   },
   methods: {
     menuToggleMobile() {
@@ -137,10 +142,12 @@ export default {
       this.isMenuNavBarActive = !this.isMenuNavBarActive
     },
     logout() {
+      this.$cookies.removeAll()
       this.$buefy.snackbar.open({
         message: 'Log out clicked',
         queue: false,
       })
+      this.$router.push('/login')
     },
   },
 }

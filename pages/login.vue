@@ -79,16 +79,17 @@ export default {
       const data = new FormData()
       data.append('email', this.email)
       data.append('password', this.password)
-      const response_login = await AuthenticationService.login(
+      const responseLogin = await AuthenticationService.login(
         this.email,
         this.password
       )
-      console.log(response_login)
 
-      if (response_login.data.status) {
-        console.log(response_login)
-      } else {
-        console.log(response_login)
+      if (responseLogin.data.status) {
+        this.$cookies.set('user', responseLogin, {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 7,
+        })
+        await this.$router.push('/')
       }
     },
     clear() {

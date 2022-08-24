@@ -28,6 +28,8 @@ if (ENV_DEV === false) {
 export default {
   debug: true,
   ssr: true,
+  target: 'server',
+
   server: {
     host: '0.0.0.0',
     port,
@@ -86,9 +88,15 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['./assets/scss/main.scss'],
-
+  router: {
+    middleware: 'auth',
+  },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/after-each.js', mode: 'client' }],
+  plugins: [
+    { src: '~/plugins/after-each.js', mode: 'client' },
+    // { mode: 'client', src: '~/plugins/FullCalendarVue' },
+    // { src: '~/plugins/vuelidate' },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

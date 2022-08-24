@@ -105,7 +105,10 @@
                     Application to: <strong>{{ item.name }}</strong>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
-                    <application-timeline :item="item"></application-timeline>
+                    <application-timeline
+                      :item="item"
+                      :student="student"
+                    ></application-timeline>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -206,6 +209,7 @@ export default {
     this.getApplicationsList()
   },
   methods: {
+    ...mapActions(['getStudent']),
     ...mapActions('applications', ['getStudentApplications']),
     setFile(file) {
       this.file = file
@@ -226,7 +230,6 @@ export default {
           this.responseSuccessMessage = ''
         }, '4000')
       }
-      console.log('getStudent setting new applications list')
       const response = await StudentsService.getStudent(
         this.$route.params.student
       )

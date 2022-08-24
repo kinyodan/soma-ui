@@ -5,6 +5,10 @@ export const apiPostClient = axios.create({
   withCredentials: false, // This is the default
 })
 
+export const verifyAuthApiPostClient = axios.create({
+  baseURL: `${process.env.APIURL}`,
+  withCredentials: false, // This is the default
+})
 // apiPostClient.interceptors.request.use(function (config) {
 //   config.headers["Authorization"] = "Bearer " + localStorage.getItem("token");
 //   config.headers["locale"] = 'en';

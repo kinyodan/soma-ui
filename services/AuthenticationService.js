@@ -1,5 +1,9 @@
 import axios from 'axios'
-import { apiGetClient } from '~/services/axios-config'
+import {
+  apiGetClient,
+  authApiPostClient,
+  verifyAuthApiPostClient,
+} from '~/services/axios-config'
 
 const apiPostClient = axios.create({
   baseURL: `${process.env.APIURL}`,
@@ -18,6 +22,15 @@ export default {
     return apiPostClient.post(`/sessions`)
   },
 
+  verifyUser(user) {
+    verifyAuthApiPostClient.interceptors.request.use(function (config) {
+      config.headers.Authorization = `{token:'${user.user}'}`
+      config.headers.locale = 'en'
+      config.headers.country = ''
+      return config
+    })
+    return verifyAuthApiPostClient.post(`/verify_authentication`)
+  },
   addApplication() {
     return apiPostClient.post(`/student_applications`)
   },

@@ -119,7 +119,8 @@ export default {
         if (response.data.status) {
           this.total_student_count = response.data.data.students_count
           this.total_applications_count = response.data.data.applications_count
-          this.completed_applications_count = response.data.data.completed_applications
+          this.completed_applications_count =
+            response.data.data.completed_applications
           this.applications_list = response.data.data.applications_list
         }
       })

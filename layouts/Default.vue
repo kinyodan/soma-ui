@@ -12,6 +12,7 @@
 import NavBar from '@/components/NavBar'
 import AsideMenu from '@/components/AsideMenu'
 import FooterBar from '@/components/FooterBar'
+import AuthenticationService from '~/services/AuthenticationService'
 
 export default {
   name: 'Default',
@@ -99,17 +100,33 @@ export default {
     },
   },
   created() {
-    this.$store.commit('user', {
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg',
-    })
+    const user = this.$cookies.get('user')
+    if (user && user.data.status) {
+      this.verifyLogin(user.data)
+      this.$store.commit('user', {
+        name: '',
+        email: user.profile,
+        avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg',
+      })
+    } else {
+      this.$router.push('/login')
+    }
   },
   mounted() {
     document.documentElement.classList.add('has-aside-left')
     document.documentElement.classList.add('has-aside-mobile-transition')
     document.documentElement.classList.add('has-navbar-fixed-top')
     document.documentElement.classList.add('has-aside-expanded')
+  },
+  methods: {
+    async verifyLogin(user) {
+      const response = await AuthenticationService.verifyUser(user)
+      if (response.data.status) {
+        console.log('authenticated')
+      } else {
+        await this.$router.push('/login')
+      }
+    },
   },
 }
 </script>
