@@ -24,7 +24,6 @@
     "axios": "^0.27.2",
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",
-    "bower": "1.8.8",
     "chart.js": "^2.9.3",
     "cookie-universal-nuxt": "^2.2.2",
     "core-js": "^3.19.3",
