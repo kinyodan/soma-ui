@@ -74,6 +74,12 @@ import DashboardService from '~/services/DashboardService'
 export default {
   name: 'Home',
   layout: 'Default',
+  ssr: false,
+  loadingIndicator: {
+    name: 'rotating-plane',
+    color: 'blue',
+    background: 'red'
+  },
   components: {
     ApplicationsTable,
     LineChart,

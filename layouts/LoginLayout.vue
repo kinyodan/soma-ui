@@ -60,7 +60,7 @@ export default {
         //     icon: 'square-edit-outline',
         //   },
         //   {
-        //     to: '/profile',
+        //     to: '/profiles',
         //     label: 'Profile',
         //     icon: 'account-circle',
         //   },

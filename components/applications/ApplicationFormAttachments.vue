@@ -2,6 +2,16 @@
   <div>
     <v-card-text>
       <v-container>
+        <template>
+          <div class="text-center">
+             <v-overlay :value="overlay">
+              <v-progress-circular
+                indeterminate
+                size="64"
+              >...Saving...</v-progress-circular>
+            </v-overlay>
+          </div>
+        </template>
         <v-row>
           <v-col cols="12" sm="6" md="12">
             <template>
@@ -203,6 +213,7 @@ export default {
   props: ['student', 'application_item'],
   data() {
     return {
+      overlay: false,
       application_name_selected: '',
       formdata: {
         application_name: '',
@@ -317,6 +328,7 @@ export default {
     },
     async submit() {
       const formData = new FormData()
+      this.overlay = true
 
       if (typeof this.formdata.application_name === 'object') {
         this.formdata.application_name = this.formdata.application_name.text
@@ -350,6 +362,7 @@ export default {
       await ApplicationsService.addApplication(formData).then((response) => {
         if (response.data.status) {
           this.clearData()
+          this.overlay=false
           this.$nuxt.$emit('refreshStudentData', this.student.id)
         }
       })
@@ -408,6 +421,11 @@ export default {
       }
       this.application_name_selected = v
     },
+    // overlay (val) {
+    //   val && setTimeout(() => {
+    //     this.overlay = false
+    //   }, 3000)
+    // },
   },
 }
 </script>

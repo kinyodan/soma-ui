@@ -14,7 +14,7 @@ let https = false
 if (ENV_DEV === false) {
   port = 3000 // make sure this port is open on your server you can do that via WHM or talk to you hosting company
   // eslint-disable-next-line no-unused-vars
-  host = 'localhost'
+  host = 'wankimani.ac.ke'
   // eslint-disable-next-line no-unused-vars
   https = {
     key: fs.readFileSync(
@@ -40,7 +40,7 @@ export default {
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'dapply-api',
+    title: 'dapply-ui',
     htmlAttrs: {
       lang: 'en',
     },

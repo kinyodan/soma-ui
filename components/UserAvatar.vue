@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import Vuex from "vuex";
 import { mapState } from 'vuex'
 export default {
   name: 'UserAvatar',

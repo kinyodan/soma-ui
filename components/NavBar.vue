@@ -56,7 +56,7 @@
         <nav-bar-menu class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
-            <span>{{ userEmail }}</span>
+            <span></span>
           </div>
 
           <div slot="dropdown" class="navbar-dropdown">
@@ -118,6 +118,7 @@ export default {
   data() {
     return {
       isMenuNavBarActive: false,
+      isNavBarVisible: true,
     }
   },
   computed: {
@@ -127,16 +128,16 @@ export default {
     menuToggleMobileIcon() {
       return this.isAsideMobileExpanded ? 'backburger' : 'forwardburger'
     },
-    ...mapState([
-      'isNavBarVisible',
-      'isAsideMobileExpanded',
-      'userName',
-      'userEmail',
-    ]),
+    // ...mapState([
+    //   'isNavBarVisible',
+    //   'isAsideMobileExpanded',
+    //   'userName',
+    //   'userEmail',
+    // ]),
   },
   methods: {
     menuToggleMobile() {
-      this.$store.commit('asideMobileStateToggle')
+      // this.$store.commit('asideMobileStateToggle')
     },
     menuNavBarToggle() {
       this.isMenuNavBarActive = !this.isMenuNavBarActive
