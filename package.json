@@ -11,7 +11,7 @@
     "dev": "nuxt",
     "generate": "nuxt generate",
     "postinstall": "npm rebuild node-sass",
-    "start": "vue-cli-service serve --open",
+    "start": "npm run start",
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
