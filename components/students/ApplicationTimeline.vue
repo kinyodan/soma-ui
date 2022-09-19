@@ -538,7 +538,7 @@ html {
 }
 
 .file_view_0 embed {
-  height: 600px !important;
+  height: 780px !important;
   overflow: scroll;
 }
 .wrapper_0 {

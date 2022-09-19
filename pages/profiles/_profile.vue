@@ -250,8 +250,12 @@ export default {
 }
 </script>
 <style scoped>
-embed {
+html {
   height: 100%;
+}
+
+embed {
+  height: 100% !important;
   width: 1050px;
 }
 .ma-padding-i {
