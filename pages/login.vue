@@ -90,6 +90,9 @@ export default {
           maxAge: 60 * 60 * 24 * 7,
         })
         await this.$router.push('/')
+      }else{
+        await this.$router.push('/login')
+
       }
     },
     clear() {

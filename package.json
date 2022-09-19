@@ -8,7 +8,8 @@
     "dev": "nuxt",
     "generate": "nuxt generate",
     "postinstall": "npm rebuild node-sass",
-    "start": "vue-cli-service serve --open"
+    "start": "vue-cli-service serve --open",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@fullcalendar/core": "^5.11.2",
@@ -38,6 +39,7 @@
     "nuxt-buefy": "^0.3.31",
     "nuxt-i18n": "^6.20.6",
     "nuxt-lazy-load": "^1.2.7",
+    "pm2": "^5.2.0",
     "sass": "^1.53.0",
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.0",
