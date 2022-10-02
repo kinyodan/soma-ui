@@ -162,7 +162,8 @@ export default {
         avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg',
       })
     } else {
-      this.$router.push('/login')
+      this.$router.push('/sign-in')
+      // this.$router.push('/login')
     }
   },
   mounted() {
@@ -182,7 +183,8 @@ export default {
           await this.$router.push(`/profiles/${response.data.id}`)
         }
       } else {
-        await this.$router.push('/login')
+        await this.$router.push('/sign-in')
+        // await this.$router.push('/login')
       }
     },
   },

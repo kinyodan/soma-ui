@@ -148,7 +148,7 @@ export default {
         message: 'Log out clicked',
         queue: false,
       })
-      this.$router.push('/login')
+      this.$router.push('/sign-in')
     },
   },
 }

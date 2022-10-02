@@ -6,13 +6,13 @@ const path = require('path')
 const ENV_DEV = true
 
 // Development Environment
-// let port = 3000
+let port = 3000
 let host = 'localhost'
 let https = false
 
 // Production Environment
 if (ENV_DEV === false) {
-  // port = 3000 // make sure this port is open on your server you can do that via WHM or talk to you hosting company
+  port = 3000 // make sure this port is open on your server you can do that via WHM or talk to you hosting company
   // eslint-disable-next-line no-unused-vars
   host = 'wankimani.ac.ke'
   // eslint-disable-next-line no-unused-vars
@@ -30,13 +30,9 @@ export default {
   ssr: true,
   target: 'server',
 
-  // server: {
-  //   host: '0.0.0.0',
-  //   port,
-  //   timing: false,
-  // },
   server: {
     host: '0.0.0.0',
+    port,
     timing: false,
   },
   static: {
@@ -98,7 +94,10 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/after-each.js', mode: 'client' },
-    // { mode: 'client', src: '~/plugins/FullCalendarVue' },
+    // { src: '@/plugins/phone-input'},
+    // { src: '~/plugins/vee-validate.js', ssr: true },
+    {src: '~/plugins/Vuelidate'}
+// { mode: 'client', src: '~/plugins/FullCalendarVue' },
     // { src: '~/plugins/vuelidate' },
   ],
 
@@ -120,7 +119,8 @@ export default {
   // },
 
   env: {
-    APIURL: process.env.APIURL || 'https://dapply-api.herokuapp.com/api/v1',
+    // APIURL: process.env.APIURL || 'https://dapply-api.herokuapp.com/api/v1',
+    APIURL: process.env.APIURL || 'http://localhost:3002/api/v1',
   },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -133,5 +133,7 @@ export default {
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    // transpile: ['vee-validate']
+  },
 }
