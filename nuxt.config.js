@@ -119,8 +119,8 @@ export default {
   // },
 
   env: {
-    // APIURL: process.env.APIURL || 'https://dapply-api.herokuapp.com/api/v1',
-    APIURL: process.env.APIURL || 'http://localhost:3002/api/v1',
+    APIURL: process.env.APIURL || 'https://dapply-api.herokuapp.com/api/v1',
+    // APIURL: process.env.APIURL || 'http://localhost:3002/api/v1',
   },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
