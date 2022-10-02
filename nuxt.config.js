@@ -6,13 +6,13 @@ const path = require('path')
 const ENV_DEV = true
 
 // Development Environment
-let port = 3000
+// let port = 3000
 let host = 'localhost'
 let https = false
 
 // Production Environment
 if (ENV_DEV === false) {
-  port = 3000 // make sure this port is open on your server you can do that via WHM or talk to you hosting company
+  // port = 3000 // make sure this port is open on your server you can do that via WHM or talk to you hosting company
   // eslint-disable-next-line no-unused-vars
   host = 'wankimani.ac.ke'
   // eslint-disable-next-line no-unused-vars
@@ -32,7 +32,7 @@ export default {
 
   server: {
     host: '0.0.0.0',
-    port,
+    // port,
     timing: false,
   },
   static: {
