@@ -1,5 +1,6 @@
 <template>
   <v-app>
+
     <v-card data-app class="ma-padding-i">
       <title-bar :salutation="`Hello `" :student="student" />
       <v-dialog v-model="dialog" persistent max-width="1000px">

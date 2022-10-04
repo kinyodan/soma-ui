@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 // eslint-disable-next-line nuxt/no-cjs-in-config
 const fs = require('fs')
 // eslint-disable-next-line nuxt/no-cjs-in-config
@@ -49,7 +51,8 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
-    ],
+      { name: "google-signin-client_id", content:"YOUR_CLIENT_ID.apps.googleusercontent.com"}
+      ],
     link: [
       {
         rel: 'stylesheet',
@@ -82,6 +85,13 @@ export default {
         body: true,
         rel: 'dns-prefetch',
       },
+      {
+        src: 'https://apis.google.com/js/platform.js',
+        type: 'text/javascript',
+        defer: true,
+        body: true,
+        rel: 'dns-prefetch',
+      },
     ],
   },
   loading: { color: '#fff' },
@@ -109,6 +119,7 @@ export default {
     // ['@nuxtjs/fontawesome']
     '@nuxtjs/vuetify',
     '@nuxtjs/moment',
+    '@nuxtjs/dotenv'
   ],
   //
   // fontawesome: {
@@ -119,8 +130,11 @@ export default {
   // },
 
   env: {
-    APIURL: process.env.APIURL || 'https://dapply-api.herokuapp.com/api/v1',
-    // APIURL: process.env.APIURL || 'http://localhost:3002/api/v1',
+    // APIURL: process.env.APIURL || 'https://dapply-api.herokuapp.com/api/v1',
+    APIURL: process.env.APIURL || 'http://localhost:3002/api/v1',
+    MAIN_LOGO: process.env.MAIN_LOGO || "https://res.cloudinary.com/selae-learning/image/upload/r_16/v1664910072/wankimani/Indigo_White_Modern_Minimal_Typographic_Business_Brand_Identity_Logo_4_aikzkb.png"
+
+    // MAIN_LOGO: process.env.MAIN_LOGO || "https://res.cloudinary.com/selae-learning/image/upload/r_21/v1664904564/wankimani/Indigo_White_Modern_Minimal_Typographic_Business_Brand_Identity_Logo_3_ew2c2h.png"
   },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -130,6 +144,7 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
     'cookie-universal-nuxt',
+    '@nuxtjs/dotenv',
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

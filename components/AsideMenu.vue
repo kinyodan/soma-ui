@@ -1,7 +1,10 @@
 <template>
   <aside v-show="isAsideVisible" class="aside is-placed-left is-expanded">
     <aside-tools :is-main-menu="true">
-      <span slot="label"> <b>Wankimani Admin</b> </span>
+    
+          <span slot="label"> <img :src="main_logo" alt="wira link " width="500" height="600"> </span>
+
+
     </aside-tools>
     <div class="menu is-menu-main">
       <template v-for="(menuGroup, index) in menu">
@@ -23,6 +26,7 @@
 import { mapState } from 'vuex'
 import AsideTools from '@/components/AsideTools'
 import AsideMenuList from '@/components/AsideMenuList'
+import LogoUrl from "~/services/LogoService"
 
 export default {
   name: 'AsideMenu',
@@ -33,6 +37,14 @@ export default {
       default: () => [],
     },
   },
+  data(){
+    return{
+      main_logo:"",
+    }
+  },
+  created(){
+    this.setMainLogo()
+  },
   computed: {
     ...mapState(['isAsideVisible']),
   },
@@ -40,6 +52,11 @@ export default {
     menuClick(item) {
       //
     },
+    setMainLogo(){
+      let logo_url = LogoUrl.setLogo()
+      console.log(logo_url)
+      this.main_logo= logo_url
+    }
   },
 }
 </script>
