@@ -1,4 +1,3 @@
-require('dotenv').config()
 
 // eslint-disable-next-line nuxt/no-cjs-in-config
 const fs = require('fs')
