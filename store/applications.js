@@ -13,9 +13,9 @@ export const mutations = {
 }
 
 export const actions = {
-  async getStudentApplications({ commit }, studentUuid) {
+  async getStudentApplications({ commit }, studentUuid,user) {
     const response = await ApplicationsService.lisApplicationsForStudent(
-      studentUuid
+      studentUuid,user
     )
     if (response.data.status) {
       console.log('getStudentApplications------')

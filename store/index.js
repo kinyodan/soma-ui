@@ -76,8 +76,8 @@ export const mutations = {
 }
 
 export const actions = {
-  async getApplications({ commit }) {
-    const response = await ApplicationsService.lisApplications()
+  async getApplications({ commit },user) {
+    const response = await ApplicationsService.lisApplications(user)
     if (response.data.status) {
       commit('SET_APPLICATIONS_LIST', response.data.data)
     }

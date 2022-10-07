@@ -1,7 +1,26 @@
 <template>
   <div>
+  <div v-if="successMessage" class="alert success_alert_box alert-success">
+        <div class="alert-container">
+          <div class="alert-icon">
+          <h1 v-html="successMessageText">
+            <i class="fa fa-check"></i>
+             </h1>
+          </div>
+      </div>
+  </div>
+
+  <div v-if="errorMessage" class="alert success_alert_box alert-danger">
+      <div class="alert-container">
+        <div class="alert-icon">
+          <i class="fa fa-info-circle"></i>
+           {{errorMessageText}}
+        </div>
+      </div>
+  </div>
+
   <div class="container" id="container">
-    <div class="form-container sign-up-container">
+      <div class="form-container sign-up-container">
       <form action="#">
         <h1>Create Account</h1>
         <div class="social-container">
@@ -9,7 +28,8 @@
           <a href="#" class="social"><i class="fa fa-google"></i></a>
           <a href="#" class="social"><i class="fa fa-linkedin"></i></a>
         </div>
-        <span>or use your email for registration</span>
+        <span>or use your email for registration</span>{{email}}--{{password}}
+
         <input v-model="email_s" type="email" placeholder="Email"/>
         <input v-model="phoneNumber" type="text" placeholder="Phone"/>
         <input v-model="password" type="password" placeholder="Password"/>
@@ -103,6 +123,10 @@ export default {
       'Item 4',
     ],
     checkbox: null,
+    successMessage:false,
+    successMessageText:"",
+    errorMessage:false,
+    errorMessageText:"",
   }),
   validations: {
     phoneNumber: {
@@ -135,6 +159,7 @@ export default {
     signInButton.addEventListener('click', () => {
       container.classList.remove("right-panel-active");
     });
+    this.clear()
   },
   methods: {
     async signUpsubmit() {
@@ -142,6 +167,10 @@ export default {
       data.append('email', this.email_s)
       data.append('password', this.password)
       data.append('confirm_password', this.confirm_pass)
+
+      const signUpButton = document.getElementById('signUp');
+      const container = document.getElementById('container');
+
       const responseLogin = await AuthenticationService.signUpUser(
         data
       )
@@ -151,16 +180,21 @@ export default {
           path: '/',
           maxAge: 60 * 60 * 24 * 7,
         })
-        await this.$router.push('/')
+        this.successMessage = true
+        this.successMessageText = responseLogin.data.message + "  <b>Sign-in</b> to Continue"
+        console.log(this.successMessage)
+        this.clear()
+        data = null
+        // container.classList.remove("right-panel-active");
+        // await this.$router.push('/sign-in')
       }else{
+        this.errorMessage = true
+        this.errorMessageText = responseLogin.data.message
         // await this.$router.push('/sign-in')
       }
 
     },
     async signInsubmit() {
-      const data = new FormData()
-      data.append('email', this.email)
-      data.append('password', this.password)
       const responseLogin = await AuthenticationService.login(
         this.email,
         this.password
@@ -171,6 +205,7 @@ export default {
           path: '/',
           maxAge: 60 * 60 * 24 * 7,
         })
+        this.clear()
         await this.$router.push('/')
       }else{
         // await this.$router.push('/sign-in')
@@ -179,6 +214,7 @@ export default {
     clear() {
       // you can use this method to clear login form
       this.email = ""
+      this.email_s = ""
       this.phoneNumber = ""
       this.password = ""
       this.confirm_pass= ""

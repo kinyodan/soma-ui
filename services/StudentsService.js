@@ -1,14 +1,17 @@
-import { apiGetClient, apiPostClient } from './axios-config'
+import { apiGetClient, apiPostClient , setTokenApiGet ,setTokenApiPost } from './axios-config'
 
 export default {
-  listStudents() {
+  listStudents(user) {
+    setTokenApiGet(user)
     return apiGetClient.get(`/students`)
   },
 
-  addStudent() {
+  addStudent(user) {
+    setTokenApiGet(user)
     return apiPostClient.post(`/student_applications`)
   },
-  getStudent(uuid) {
+  getStudent(uuid,user) {
+    setTokenApiPost(user)
     return apiGetClient.get(`/students/${uuid}`)
   },
 }

@@ -1,24 +1,44 @@
-import { apiGetClient, apiPostClient } from './axios-config'
+import { apiGetClient, apiPostClient , setTokenApiGet ,setTokenApiPost} from './axios-config'
 
 export default {
-  lisApplications() {
-    return apiGetClient.get(`/student_applications`)
+  lisApplications(user) {
+    apiGetClient.interceptors.request.use(function (config) {
+      config.headers.Authorization = `{token:'${user}'}`
+      config.headers.locale = 'en'
+      config.headers.country = ''
+      return config
+    })
+   return apiGetClient.get(`/student_applications`)
   },
 
   // eslint-disable-next-line camelcase
-  lisApplicationsForStudent(student_id) {
-    // eslint-disable-next-line camelcase
-    console.log('student_applications_list----------')
+  lisApplicationsForStudent(student_id,user) {
+    apiGetClient.interceptors.request.use(function (config) {
+      config.headers.Authorization = `{token:'${user}'}`
+      config.headers.locale = 'en'
+      config.headers.country = ''
+      return config
+    })
     return apiGetClient.get(`/student_applications_list`, student_id)
   },
 
-  addApplication(formData) {
+  addApplication(formData,user) {
+    setTokenApiPost(user)
     return apiPostClient.post(`/student_applications`, formData)
   },
-  getApplication(uuid) {
+
+  getApplication(uuid,user) {
+    apiGetClient.interceptors.request.use(function (config) {
+      config.headers.Authorization = `{token:'${user}'}`
+      config.headers.locale = 'en'
+      config.headers.country = ''
+      return config
+    })
     return apiGetClient.get(`/student_applications/${uuid}`)
   },
-  deleteApplication(formData) {
+
+  deleteApplication(formData,user) {
+    setTokenApiPost(user)
     return apiGetClient.post(`/soft_destroy`, formData)
   },
 }

@@ -40,3 +40,15 @@
 .payment_button_card{
   border-radius: 1% !important;
 }
+
+.success_alert_box{
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  padding: 12px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align:center;
+}

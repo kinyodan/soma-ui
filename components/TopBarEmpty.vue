@@ -1,7 +1,10 @@
 <template>
   <nav v-show="isNavBarVisible" id="navbar-main" class="navbar is-fixed-top">
     <aside-tools :is-main-menu="true">
-      <span slot="label"> <b>Wankimani Admin</b> </span>
+      <span slot="label"> 
+      <a href="#about2" class="">
+                          <img src="https://res.cloudinary.com/selae-learning/image/upload/c_thumb,g_face,r_15,w_200/v1664905155/wankimani/Indigo_White_Modern_Minimal_Typographic_Business_Brand_Identity_Logo_2_xnofnz.png"> </a>
+                           </span>
     </aside-tools>
 <!--    <h3>WANKIMANI ADMIN</h3>-->
     <div

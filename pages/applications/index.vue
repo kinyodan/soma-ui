@@ -61,8 +61,13 @@ export default {
     },
   },
   created() {
-    this.getApplications()
-    this.$nuxt.$on('refreshApplicationList', (event) => this.getApplications())
+    let userData = this.$cookies.get('user')
+    console.log("userDatauserDatauserDatauserDatauserDatauserData")
+    console.log(userData.data.user)
+    console.log("userDatauserDatauserDatauserDatauserDatauserData")
+
+    this.getApplications(userData.data.user)
+    this.$nuxt.$on('refreshApplicationList', (event) => this.getApplications(userData.data.user))
   },
   mounted() {
     this.fillChartData()

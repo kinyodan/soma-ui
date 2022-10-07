@@ -5,22 +5,22 @@ import {
   verifyAuthApiPostClient,
 } from '~/services/axios-config'
 
-const apiPostClient = axios.create({
-  baseURL: `${process.env.APIURL}`,
-  withCredentials: false, // This is the default
-})
 
 export default {
   login(email, password) {
-    console.log(email, password)
-    apiPostClient.interceptors.request.use(function (config) {
+    const apiLoginPostClient = axios.create({
+      baseURL: `${process.env.APIURL}`,
+      withCredentials: false, // This is the default
+    })
+
+    apiLoginPostClient.interceptors.request.use(function (config) {
       config.headers.Authorization = `{email:'${email}',password:'${password}'}`
       config.headers.locale = 'en'
       config.headers.country = ''
       return config
     })
 
-    return apiPostClient.post(`/sessions`)
+    return apiLoginPostClient.post(`/sessions`)
   },
 
   verifyUser(user) {
@@ -34,14 +34,18 @@ export default {
   },
 
   signUpUser(user) {
-    console.log(user)
-    apiPostClient.interceptors.request.use(function (config) {
+    
+    const apiSignUpPostClient = axios.create({
+      baseURL: `${process.env.APIURL}`,
+      withCredentials: false, // This is the default
+    })
+    apiSignUpPostClient.interceptors.request.use(function (config) {
       config.headers.Authorization = `{pass:'${user.password}',confirm:'${user.confirm_pass}'}`
       config.headers.locale = 'en'
       config.headers.country = ''
       return config
     })
-    return apiPostClient.post(`/students`,user)
+    return apiSignUpPostClient.post(`/students`,user)
   },
 
   addApplication() {
